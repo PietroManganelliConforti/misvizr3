@@ -53,3 +53,18 @@ class ImageEncodingStrategy(ABC):
 class TinyChartEncodingStrategyBase(ImageEncodingStrategy):
     def _create_processor(self):
         self.processor = image_processors.TinyChartProcessor([])
+class TinyChartOneEncoderEncodingStrategy(TinyChartEncodingStrategyBase):
+    def _initialize_encoder(self):
+        self.encoder = self.processor.get_model()
+
+    def encode(self, input_data):
+        with __import__('torch').no_grad():
+            output = self.encoder.model.vision_tower(input_data.to(self.encoder.device))
+            embedding = output.mean(dim=1) if output.dim() == 3 else output
+        return embedding.cpu()
+
+    def get_embedding_from_output(self, output):
+        return output
+
+    def get_name(self):
+        return "tinychart"

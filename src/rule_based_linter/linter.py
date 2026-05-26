@@ -213,19 +213,22 @@ def process_axis_data(axis_str):
     return axis_dict
 
 
-def get_linter_predictions(dataset='misviz', split = 'test', predicted=False):
-    
-    axis_path = f"src/output/predicted_axis_misviz/merged_axis_data_{dataset}.json"
-    metadata = [m for m in json.load(open(f"data/{args.dataset}/{args.dataset}.json", encoding="utf-8")) if m['split']==split]
-    axis_data = json.load(open(axis_path, encoding="utf-8"))[split]
-   
-    if dataset=='misviz_synth' and not predicted:
-        #use the ground truth axis
-        axis_data_path = [metadata[m]['axis_data_path'] for m in range(len(metadata))]
+
+def get_linter_predictions(dataset='misviz', split='test', predicted=False):
+
+    metadata = [m for m in json.load(open(f"data/{dataset}/{dataset}.json", encoding="utf-8")) if m['split'] == split]
+
+    if dataset == 'misviz_synth' and not predicted:
+        # usa il ground truth axis
         axis_metadata = []
-        for a in tqdm(range(len(axis_data_path))):
-            axis_metadata.append(open(json.load(f"data/misviz_synth_V2/vis_output/{axis_data_path[a]}"),'r'))                                                  
+        for m in tqdm(metadata):
+            axis_file = f"data/misviz_synth/vis_output/{m['axis_data_path']}"
+            ax = json.load(open(axis_file, 'r'))
+            axis_metadata.append(ax if ax else {'axis': [], 'label': [], 'relative_position': []})
     else:
+        # usa i predicted axis (richiede il file merged)
+        axis_path = f"src/output/predicted_axis_misviz/merged_axis_data_{dataset}.json"
+        axis_data = json.load(open(axis_path, encoding="utf-8"))[split]
         axis_metadata = [process_axis_data(a) for a in axis_data]
         
     predictions = []

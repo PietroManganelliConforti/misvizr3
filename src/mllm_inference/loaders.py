@@ -9,7 +9,7 @@ def split_model(model_name):
     device_map = {}
     world_size = torch.cuda.device_count()
     num_layers = {
-        'InternVL3/8B/':32, 'InternVL3/38B/': 64, 'InternVL3/78B/':80}[model_name.split('--')[-1]]
+        'InternVL3-8B':32, 'InternVL3-38B': 64, 'InternVL3-78B':80}[model_name.split('/')[-1]]
     num_layers_per_gpu = math.ceil(num_layers / (world_size - 0.5))
     num_layers_per_gpu = [num_layers_per_gpu] * world_size
     num_layers_per_gpu[0] = math.ceil(num_layers_per_gpu[0] * 0.5)
@@ -88,9 +88,9 @@ def load_model(model):
     'internvl3/8B/':'OpenGVLab/InternVL3-8B',
     'internvl3/38B/':'OpenGVLab/InternVL3-38B',
     'internvl3/78B/':'OpenGVLab/InternVL3-78B',
-    'qwen2.5vl/7B/': 'Qwen2.5-VL-7B-Instruct/',
-    'qwen2.5vl/32B/': 'Qwen2.5-VL-32B-Instruct/',
-    'qwen2.5vl/72B/': 'Qwen2.5-VL-72B-Instruct/',
+    'qwen2.5vl/7B/': 'Qwen/Qwen2.5-VL-7B-Instruct',
+    'qwen2.5vl/32B/': 'Qwen/Qwen2.5-VL-32B-Instruct/',
+    'qwen2.5vl/72B/': 'Qwen/Qwen2.5-VL-72B-Instruct/',
         }
     
     loader_map = {'internvl3': loader_internvl3, 

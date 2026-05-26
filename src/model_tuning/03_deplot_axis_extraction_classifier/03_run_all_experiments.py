@@ -374,8 +374,8 @@ def run_all_train_experiments(
                 val_dataset_misviz, _ = commons.prepare_datasets_misviz(
                     model,
                     precomp_path,
-                    misviz_path,
-                    output_prev_steps_path,
+                    output_prev_steps_path,  # ← prima questo
+                    misviz_path,             # ← poi questo
                     experiment,
                     label_to_idx,
                     device,

@@ -57,7 +57,11 @@ def generate_answer_qwen25vl_32B(image_path, prompt, tokenizer, model, max_token
 
 def generate_answer_internvl3(image_path, prompt, tokenizer, model, max_tokens=200):
     generation_config = dict(max_new_tokens=max_tokens, do_sample=False)
-    pixel_values = load_image_internvl2(image_path, max_num=12).to(torch.bfloat16).cuda()
+    try:
+        pixel_values = load_image_internvl2(image_path, max_num=12).to(torch.bfloat16).cuda()
+    except FileNotFoundError as e:
+        print(f"[WARNING] Skipping: {e}")
+        return None
     response = model.chat(tokenizer, pixel_values, prompt, generation_config)
     return response
 
@@ -174,5 +178,5 @@ def generate_answer(image_path, prompt, tokenizer, image_processor, context_len,
         generation_type = template.split('/')[0]
     else:
         generation_type = template
-    answer = prompt_map[generation_type](image_path, prompt, tokenizer, image_processor, context_len, model, max_tokens)
+    answer = prompt_map[generation_type](image_path, prompt, tokenizer, model, max_tokens)
     return answer

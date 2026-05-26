@@ -1,0 +1,10 @@
+{
+    "experiment_name": "tinychart_encoder_only_789",
+    "output_path": "src/model_tuning/03_deplot_axis_extraction_classifier/output/classifer_training_v2/tinychart_encoder_only/tinychart_encoder_only_789",
+    "learning_rate": 5e-05,
+    "epochs": 500,
+    "batch_size": 256,
+    "patience": 25,
+    "min_delta": 0.004,
+    "hidden_dim": 1024
+}

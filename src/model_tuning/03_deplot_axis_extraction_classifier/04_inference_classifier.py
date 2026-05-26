@@ -13,7 +13,7 @@ if root_folder not in sys.path:
 import utils
 
 def load_model(base_model, e_type, seed, input_dim, hidden_dim, output_dim, device):
-    base_path =f"src/model_tuning/03_deplot_axis_extraction_classifier/output/classifier_training/{base_model}_{e_type}/{base_model}_{e_type}_{seed}/weights"
+    base_path =f"src/model_tuning/03_deplot_axis_extraction_classifier/output/{base_model}_{e_type}/{base_model}_{e_type}_{seed}/weights"
     checkpoint_path = os.path.join(base_path, f"best_model.pth")
     model = utils.ClassifierHead(input_dim, hidden_dim, output_dim)
     checkpoint = torch.load(checkpoint_path, map_location=device)
@@ -69,7 +69,7 @@ def main(args):
     base_model= "tinychart"
     hidden_dim = 1024
     for seed in [123, 456, 789]:
-        for e_type in ["encoder_only", "with_axis"]:
+        for e_type in ["encoder_only"]:
             _, _, test_dataset_misviz_synth = commons.prepare_datasets_misviz_synth(
                 base_model,
                 args.precomp_path,
@@ -81,13 +81,13 @@ def main(args):
             )
 
             _, test_dataset_misviz = commons.prepare_datasets_misviz(
-                base_model,
-                args.precomp_path,
-                args.datasetpath_misviz,
-                args.output_prev_steps_path,
-                e_type,
-                label_to_idx,
-                device,
+            base_model,
+            args.precomp_path,
+            args.output_prev_steps_path,   # ← prima questo
+            args.datasetpath_misviz,       # ← poi questo
+            e_type,
+            label_to_idx,
+            device,
             )
 
             # Load model

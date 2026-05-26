@@ -35,7 +35,7 @@ class MisvizSynthDataset(DatasetType):
 
         all_file_paths_for_partition = []
         for entry in self.metadata:
-            if partition in entry["split"]:
+            if partition == entry["split"]:
                 filepath_in_partition = os.path.join(
                     self.dataset_path,
                     "vis_output",
@@ -45,10 +45,10 @@ class MisvizSynthDataset(DatasetType):
         return all_file_paths_for_partition
 
     def get_dataset_name(self):
-        return "misviz_synth"
+        return "misviz_synth" 
 
-    def get_available_partitions(self):
-        return ["val", "test", "train small"]
+    def get_available_partitions(self):         
+        return ["val", "test", "train"]
 
 
 class MisvizDataset(DatasetType):
@@ -57,7 +57,7 @@ class MisvizDataset(DatasetType):
         metadata_path = os.path.join(self.dataset_path, "misviz.json")
         with open(metadata_path, "r") as existing_metadata_file:
             self.metadata = json.load(existing_metadata_file)
-
+ 
     def get_all_file_paths_for_partition(self, partition):
         self.check_partition_in_available_partitions(partition)
         all_file_paths_for_partition = []

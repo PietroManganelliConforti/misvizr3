@@ -33,6 +33,8 @@ def compute_image_embeddings_for_partition(
         img_paths_batch = img_paths[i : min(i + batch_size, len(img_paths))]
         image_batch = torch.tensor([]).to(backend)
         for img_path in img_paths_batch:
+            if not os.path.exists(img_path):
+                continue
             image = Image.open(img_path).convert("RGB")
             preprocessed_image = img_encoding_strategy.preprocess_images(image).to(
                 backend
@@ -43,7 +45,7 @@ def compute_image_embeddings_for_partition(
             encoder_output = img_encoding_strategy.encode(image_batch)
 
         encoding = img_encoding_strategy.get_embedding_from_output(encoder_output)
-        all_embedded_images = torch.cat([all_embedded_images, encoding])
+        all_embedded_images = torch.cat([all_embedded_images, encoding.to(backend)])
 
     os.makedirs(output_path, exist_ok=True)
 
@@ -67,7 +69,7 @@ def compute_image_embeddings(model, dataset_strategy, output_path, batch_size):
     for dataset_partition in dataset_strategy.get_available_partitions():
         print(f"-- Computing embeddings for {dataset_partition} partition ...")
 
-        if dataset_partition == "train":
+        if dataset_partition in ["train", "train_small"]:
             img_encoding_strategy.set_processor_augmentations(
                 ["rotation", "perspective"]
             )

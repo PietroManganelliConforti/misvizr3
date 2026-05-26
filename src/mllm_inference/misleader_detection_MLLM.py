@@ -111,12 +111,18 @@ if __name__=='__main__':
                     ```  
                 """
 
+
         predicted_answer = generate_answer(image_path, 
                                         prompt, 
                                         tokenizer, 
+                                        None,       # image_processor (unused by all current models)
+                                        None,       # context_len (unused by all current models)
                                         model, 
-                                        m, 
+                                        m,          # template = model name string, e.g. "internvl3/8B/"
                                         max_tokens)
+        if predicted_answer is None:
+            # in case is none, we skip this instance and move to the next one
+            continue
 
         if m in ['GPT41', 'o3', 'gemini-2.5-flash-lite']:
             usage = predicted_answer[1] 
